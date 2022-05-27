@@ -1,22 +1,26 @@
 import re
 import os
 
+def search(file, pattern):
+    f = open(file, 'r')
+    text = f.read()
+    match = re.search(pattern, text)
+
+    if match:
+        return match
+    else:
+        pass
+
+
 def main():
 
     results = []
-    text = ''
     pattern = r'\d{3}-\d{3}-\d{4}'
-    directory = os.walk(os.getcwd() + '/extracted_content')
 
-    for folder, subs, files in directory:
-
+    for folder, subs, files in os.walk(os.getcwd() + '/extracted_content'):
         for f in files:
             full_path = folder + '/' + f
-            f = open(full_path, 'r')
-            text = f.read()
-
-            results.append(re.search(pattern, text))
-
+            results.append(search(full_path, pattern))
     for r in results:
         if r != None:
             print(r.group())
