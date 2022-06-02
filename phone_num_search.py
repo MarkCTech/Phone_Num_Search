@@ -1,29 +1,29 @@
 import re
-import os
 import logging
 from pathlib import Path
 from shutil import unpack_archive
 
-def main():
 
+def main():
     results = []
     pattern = r"\d{3}-\d{3}-\d{4}"
 
     unzipper()
 
-    for folder,subs,files in os.walk(os.getcwd() + "/zip_files"):
-        for file in files:
-            if file.endswith('.txt'):
-                full_path = folder + '/' + file
-                results.append(search(full_path, pattern))
-            else:
-                pass
+    zip_dir = Path.cwd() / "zip_files/"
+    txt_files = zip_dir.rglob("*.txt")
+
+    for file in txt_files:
+        results.append(search(file, pattern))
+    else:
+        pass
     for res in results:
-        if res != None:
+        if res is not None:
             print(res.group())
 
+
 def unzipper():
-    zip_dir = Path(os.getcwd() + "/zip_files/")
+    zip_dir = Path.cwd() / "zip_files/"
     zip_files = zip_dir.rglob("*.zip")
 
     while True:
@@ -37,6 +37,7 @@ def unzipper():
             extract_dir = path.with_name(path.stem)
             unpack_archive(str(path), str(extract_dir), "zip")
 
+
 def search(file, pattern):
     f = open(file, 'r')
     text = f.read()
@@ -46,6 +47,7 @@ def search(file, pattern):
         return match
     else:
         pass
+
 
 if __name__ == '__main__':
     main()
